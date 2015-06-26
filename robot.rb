@@ -2,15 +2,12 @@
 # until a valid place command is received @face will be nil
 
 class Table
-  attr_accessor :grid
 
   def initialize
-    @grid = []
-
   end
 
-  def in_bounds?(x,y)
-    return false if (x > 4 || x < 0) || (y > 4 || y < 0)
+  def in_bounds?(x, y)
+    return false if x > 4 || x < 0 || y > 4 || y < 0
     true
   end
 end
@@ -38,6 +35,7 @@ class Robot
   end
 
   def move(table)
+    # ignore command if result invalid
     case @face
       when 0
         @y += 1 if table.in_bounds?(@x, @y + 1)
@@ -50,14 +48,13 @@ class Robot
     end
   end
 
-  def place(x,y,face,table)
+  def place(x, y, face, table)
     xi = x.to_i
     yi = y.to_i
-    if table.in_bounds?(xi, yi)
+    # ignore command if invalid
+    if table.in_bounds?(xi, yi) && @face_name.index(face.upcase)
       @x, @y = xi, yi
       @face = @face_name.index(face.upcase)
-    else
-      @face = nil
     end
   end
 
@@ -73,7 +70,7 @@ end
 class Command
 
   def initialize
-    @commands = ['MOVE','LEFT','RIGHT','REPORT','PLACE']
+    @commands = ['MOVE', 'LEFT', 'RIGHT', 'REPORT', 'PLACE']
   end
 
   def input
@@ -113,4 +110,3 @@ loop do
   break if command.quit?
   command.execute(robot, table)
 end
-
