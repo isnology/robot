@@ -5,7 +5,7 @@ class Table
   attr_accessor :grid
 
   def initialize
-    @grid = [][]
+    @grid = []
 
   end
 
@@ -79,6 +79,11 @@ class Command
     @a_command = gets.chomp.split(',').upcase
   end
 
+  def quit?
+    return true if @a_command[0] == 'QUIT'
+    false
+  end
+
   def execute(robot, table)
     case @a_command[0]
       when 'MOVE'
@@ -101,5 +106,9 @@ table = Table.new
 robot = Robot.new
 command = Command.new
 
-
+loop do
+  command.input
+  break if command.quit?
+  command.execute(robot, table)
+end
 
