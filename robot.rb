@@ -63,7 +63,7 @@ class Robot
 
   def report
     if @face
-      puts "X =  #{@x}, Y = #{@y}, Facing #{@face_name[@face]} "
+      puts "Output: #{@x}, #{@y}, #{@face_name[@face]} "
     else
       puts "No valid PLACE command received yet"
     end
@@ -78,7 +78,7 @@ class Command
 
   def input
     puts "Enter a command:"
-    @a_command = gets.chomp.upcase.split(',')
+    @a_command = gets.chomp.upcase.split(/[ ,]/)
   end
 
   def quit?
