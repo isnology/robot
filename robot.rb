@@ -51,8 +51,10 @@ class Robot
   end
 
   def place(x,y,face,table)
-    if table.in_bounds?(x, y)
-      @x, @y = x, y
+    xi = x.to_i
+    yi = y.to_i
+    if table.in_bounds?(xi, yi)
+      @x, @y = xi, yi
       @face = @face_name.index(face.upcase)
     else
       @face = nil
@@ -76,7 +78,7 @@ class Command
 
   def input
     puts "Enter a command:"
-    @a_command = gets.chomp.split(',').upcase
+    @a_command = gets.chomp.upcase.split(',')
   end
 
   def quit?
