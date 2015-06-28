@@ -37,5 +37,28 @@ class TestRobot < Minitest::Test
       @robot.move(@table)
       @robot.report
     end
+    assert_output(/Output: 2, 1, EAST/) do
+      @robot.place(1,1,"NORTH", @table)
+      @robot.right
+      @robot.move(@table)
+      @robot.report
+    end
+    assert_output(/Output: 0, 1, WEST/) do
+      @robot.place(1,1,"NORTH", @table)
+      @robot.left
+      @robot.move(@table)
+      @robot.report
+    end
+    assert_output(/Output: 1, 1, NORTH/) do
+      @robot.place(1,1,"NORTH", @table)
+      @robot.place(0,5,"WEST", @table)
+      @robot.report
+    end
+    assert_output(/Output: 0, 1, WEST/) do
+      @robot.place(1,1,"WEST", @table)
+      @robot.move(@table)
+      @robot.move(@table)
+      @robot.report
+    end
   end
 end
