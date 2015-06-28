@@ -49,11 +49,9 @@ class Robot
   end
 
   def place(x, y, face, table)
-    xi = x.to_i
-    yi = y.to_i
     # ignore command if invalid
-    if table.in_bounds?(xi, yi) && @face_name.index(face.upcase)
-      @x, @y = xi, yi
+    if table.in_bounds?(x, y) && @face_name.index(face.upcase)
+      @x, @y = x, y
       @face = @face_name.index(face.upcase)
     end
   end
@@ -94,7 +92,7 @@ class Command
       when 'REPORT'
         robot.report
       when 'PLACE'
-        robot.place(@a_command[1], @a_command[2], @a_command[3], table)
+        robot.place(@a_command[1].to_i, @a_command[2].to_i, @a_command[3], table)
     end
   end
 end
