@@ -7,8 +7,7 @@ class Table
   end
 
   def in_bounds?(x, y)
-    return false if x > 4 || x < 0 || y > 4 || y < 0
-    true
+    !(x > 4 || x < 0 || y > 4 || y < 0)
   end
 end
 
@@ -77,8 +76,7 @@ class Command
   end
 
   def quit?
-    return true if @a_command[0] == 'QUIT'
-    false
+    @a_command[0] == 'QUIT'
   end
 
   def execute(robot, table)
