@@ -1,12 +1,14 @@
 require 'minitest/autorun'
-require './robot_classes'
+require './table'
+require './robot'
+require './input'
 
 class TestRobot < Minitest::Test
 
   def setup
     @table = Table.new
     @robot = Robot.new
-    @command = Command.new
+    @command = Input.new
   end
 
   def test_table_limits
