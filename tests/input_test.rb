@@ -1,7 +1,7 @@
 require 'minitest/autorun'
-require '../table'
-require '../robot'
-require '../input'
+require './table'
+require './robot'
+require './input'
 
 class InputTest < Minitest::Test
 
