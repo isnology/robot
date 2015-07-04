@@ -1,8 +1,8 @@
 # simple robot moves on a grid
 
-require './table'
-require './robot'
-require './input'
+require './lib/table'
+require './lib/robot'
+require './lib/input'
 
 table = Table.new
 robot = Robot.new
