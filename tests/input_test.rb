@@ -51,7 +51,7 @@ class InputTest < Minitest::Test
 
   def mimic_input_command(str)
     stdin = $stdin
-    $stdin = StringIO.new(str+"\n")
+    $stdin = StringIO.new(str)
     @input.command
   ensure
     $stdin = stdin
