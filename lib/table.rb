@@ -1,5 +1,7 @@
 # simple robot moves on a 5 X 5 grid
 
+# model of MVC
+
 class Table
 
   def initialize

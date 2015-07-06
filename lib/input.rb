@@ -1,3 +1,4 @@
+# view of MVC
 class Input
 
   attr_reader :command

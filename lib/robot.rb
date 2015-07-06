@@ -1,5 +1,7 @@
 # until a valid place command is received @face will be nil
 
+# model of MVC
+
 class Robot
 
   NORTH = 0

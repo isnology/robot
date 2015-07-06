@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# controller of MVC
+
 require './lib/table'
 require './lib/robot'
 require './lib/input'
