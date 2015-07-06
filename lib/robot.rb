@@ -6,6 +6,7 @@ class Robot
   EAST = 1
   SOUTH = 2
   WEST = 3
+  NINETY_DEGREES = 1
 
   def initialize
     @face = nil
@@ -13,16 +14,31 @@ class Robot
     @x, @y = 0, 0
   end
 
+  def execute_command(command, table)
+    case command[0].upcase
+      when 'MOVE'
+        move(table)
+      when 'LEFT'
+        left
+      when 'RIGHT'
+        right
+      when 'REPORT'
+        report
+      when 'PLACE'
+        place(command[1].to_i, command[2].to_i, command[3].upcase, table)
+    end
+  end
+
   def left
     if @face
-      @face -= 1
+      @face -= NINETY_DEGREES
       @face = WEST if @face < NORTH
     end
   end
 
   def right
     if @face
-      @face += 1
+      @face += NINETY_DEGREES
       @face = NORTH if @face > WEST
     end
   end
@@ -43,17 +59,17 @@ class Robot
 
   def place(x, y, face, table)
     # ignore command if invalid
-    if table.in_bounds?(x, y) && @face_name.index(face.upcase)
+    if table.in_bounds?(x, y) && @face_name.index(face)
       @x, @y = x, y
-      @face = @face_name.index(face.upcase)
+      @face = @face_name.index(face)
     end
   end
 
   def report
     if @face
-      puts "Output: #{@x}, #{@y}, #{@face_name[@face]} "
+      puts "\nOutput: #{@x}, #{@y}, #{@face_name[@face]}"
     else
-      puts "No valid PLACE command received yet"
+      puts "\nNo valid PLACE command received yet"
     end
   end
 end

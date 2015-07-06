@@ -1,4 +1,4 @@
-# simple robot moves on a grid
+#!/usr/bin/env ruby
 
 require './lib/table'
 require './lib/robot'
@@ -9,7 +9,7 @@ robot = Robot.new
 input = Input.new
 
 loop do
-  input.command
+  input.enter_command
   break if input.quit?
-  input.execute_command(robot, table)
+  robot.execute_command(input.command, table)
 end
