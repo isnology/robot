@@ -1,6 +1,6 @@
 require 'minitest/autorun'
-require './lib/table'
-require './lib/robot'
+require_relative '../lib/table'
+require_relative '../lib/robot'
 
 class RobotTest < Minitest::Test
 
@@ -84,6 +84,15 @@ class RobotTest < Minitest::Test
     assert_output(/Output: 0, 1, WEST/) do
       @robot.place(1,1,"WEST", @table)
       @robot.move(@table)
+      @robot.move(@table)
+      @robot.report
+    end
+  end
+
+  def test_obstacle_blocking_move
+    assert_output(/Output: 1, 1, NORTH/) do
+      @robot.place(1,1,"NORTH", @table)
+      @table.add_obstacle(1, 2)
       @robot.move(@table)
       @robot.report
     end

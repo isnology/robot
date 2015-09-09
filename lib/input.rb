@@ -15,4 +15,6 @@ class Input
   def quit?
     @command[0].upcase == 'QUIT'
   end
+
+
 end

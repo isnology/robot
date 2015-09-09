@@ -13,5 +13,6 @@ input = Input.new
 loop do
   input.enter_command
   break if input.quit?
+
   robot.execute_command(input.command, table)
 end
