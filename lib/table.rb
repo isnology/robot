@@ -30,11 +30,7 @@ class Table
     puts
     Y_MAX.downto(0) do |y|
       0.upto(X_MAX) do |x|
-        if @obstacles.include?([x, y])
-          print "X"
-        else
-          print "O"
-        end
+        print @obstacles.include?([x, y]) ? "X" : "O"
       end
       puts
     end

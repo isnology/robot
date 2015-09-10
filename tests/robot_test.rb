@@ -9,10 +9,6 @@ class RobotTest < Minitest::Test
     @robot = Robot.new
   end
 
-  def test_responds_to_execute_command
-    assert_respond_to(@robot, :execute_command)
-  end
-
   def test_responds_to_move
     assert_respond_to(@robot, :move)
   end

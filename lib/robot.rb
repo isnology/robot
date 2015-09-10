@@ -16,27 +16,6 @@ class Robot
     @x, @y = 0, 0
   end
 
-  # execute_command could be pulled out into its own class as it now interacts with both Robot and Table classes
-  def execute_command(command, table)
-    case command[0].upcase
-      when 'MOVE'
-        move(table)
-      when 'LEFT'
-        left
-      when 'RIGHT'
-        right
-      when 'REPORT'
-        report
-      when 'PLACE'
-        place(command[1].to_i, command[2].to_i, command[3].upcase, table)
-      when 'PLACE_OBJECT'
-        x, y = next_move
-        table.add_obstacle(x, y)
-      when 'MAP'
-        table.map
-    end
-  end
-
   def left
     if @face
       @face -= NINETY_DEGREES
@@ -66,25 +45,19 @@ class Robot
   end
 
   def report
-    if @face
-      puts "\nOutput: #{@x}, #{@y}, #{@face_name[@face]}"
-    else
-      puts "\nNo valid PLACE command received yet"
-    end
+    puts @face ? "\nOutput: #{@x}, #{@y}, #{@face_name[@face]}" : "\nNo valid PLACE command received yet"
   end
 
-  private
-
-    def next_move
-      case @face
-        when NORTH
-          return @x, (@y + 1)
-        when EAST
-          return (@x + 1), @y
-        when SOUTH
-          return @x, (@y - 1)
-        when WEST
-          return (@x - 1), @y
-      end
+  def next_move
+    case @face
+      when NORTH
+        return @x, (@y + 1)
+      when EAST
+        return (@x + 1), @y
+      when SOUTH
+        return @x, (@y - 1)
+      when WEST
+        return (@x - 1), @y
     end
+  end
 end

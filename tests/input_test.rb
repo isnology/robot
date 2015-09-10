@@ -29,4 +29,5 @@ class InputTest < Minitest::Test
   ensure
     $stdin = stdin
   end
+
 end
