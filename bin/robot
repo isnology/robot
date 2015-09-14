@@ -1,19 +1,5 @@
 #!/usr/bin/env ruby
 
-# controller of MVC
+require_relative '../lib/controller'
 
-require './lib/table'
-require './lib/robot'
-require './lib/input'
-require './lib/process_command'
-
-table = Table.new
-robot = Robot.new
-input = Input.new
-process_cmd = ProcessCommand.new
-
-loop do
-  input.enter_command
-  break if input.quit?
-  process_cmd.execute_command(input.command, robot, table)
-end
+Controller.new.main
