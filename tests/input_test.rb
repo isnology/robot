@@ -1,33 +1,22 @@
-require 'minitest/autorun'
+require 'rspec'
 require_relative '../lib/input'
 
-class InputTest < Minitest::Test
+RSpec.describe "Testing Input class -" do
 
-  def setup
+  before do
     @input = Input.new
   end
 
-  def test_input_command_multiple_values
-    mimic_input_command("place 1,1,north")
-    assert_equal(['place','1','1','north'], @input.command)
-  end
-
-  def test_input_command_single_value
-    mimic_input_command("move")
-    assert_equal(['move'], @input.command)
-  end
-
-  def test_place_object_command
-    mimic_input_command("place_object")
-    assert_equal(["place_object"], @input.command)
-  end
-
-  def mimic_input_command(str)
-    stdin = $stdin
-    $stdin = StringIO.new(str)
+  it "should place multi part command into an array" do
+    allow(@input).to receive(:gets) { "place 1, 1,north\n" }
     @input.enter_command
-  ensure
-    $stdin = stdin
+    expect(@input.command).to eq(['place','1','1','north'])
+  end
+
+  it "should place single value command into array" do
+    allow(@input).to receive(:gets) { "move\n" }
+    @input.enter_command
+    expect(@input.command).to eq(["move"])
   end
 
 end

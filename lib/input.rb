@@ -9,12 +9,11 @@ class Input
 
   def enter_command
     puts "\nEnter a command:"
-    @command = gets.chomp.split(/[ ,]/)
+    @command = gets.chomp.split(/[,\s]+/)
   end
 
   def quit?
     @command[0].upcase == 'QUIT'
   end
-
 
 end

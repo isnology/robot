@@ -1,61 +1,77 @@
-require 'minitest/autorun'
+require 'rspec'
 require_relative '../lib/table'
+require_relative '../lib/robot'
+require_relative '../lib/coordinates'
 
-class TableTest < Minitest::Test
+RSpec.describe "testing Table class -" do
 
-  def setup
+  before do
     @table = Table.new
+    @robot = Robot.new
   end
 
-  def test_southwest_limit
-    assert_equal(true, @table.valid_move?(0,0))
+  context "outer limits" do
+    it "should be valid south-west position" do
+      expect(@table.valid_move?(Coordinates.new(0,0))).to be true
+    end
+
+    it "should be valid north-east position" do
+      expect(@table.valid_move?(Coordinates.new(4,4))).to be true
+    end
   end
 
-  def test_northeast_limit
-    assert_equal(true, @table.valid_move?(4,4))
+  context "out of bounds should be invalid" do
+    it "on western edge" do
+      expect(@table.valid_move?(Coordinates.new(-1,0))).to be false
+    end
+
+    it "on eastern edge" do
+      expect(@table.valid_move?(Coordinates.new(5,0))).to be false
+    end
+
+    it "on southern edge" do
+      expect(@table.valid_move?(Coordinates.new(0,-1))).to be false
+    end
+
+    it "on northern edge" do
+      expect(@table.valid_move?(Coordinates.new(0, 5))).to be false
+    end
   end
 
-  def test_western_out_of_bounds
-    assert_equal(false, @table.valid_move?(-1,0))
+  context "add an obstacle when in bounds" do
+    it "should increase set count by one" do
+      @robot.place(["place","1","1","north"], @table)
+      @table.place_object(["place_object"], @robot)
+      expect(@table.obstacles.size).to eq(1)
+    end
+
+    it "should be an invalid move" do
+      @robot.place(["place","1","1","north"], @table)
+      @table.place_object(["place_object"], @robot)
+      expect(@table.valid_move?(Coordinates.new(1, 2))).to be false
+    end
+
+    it "in the same place twice should only add to set count once" do
+      @robot.place(["place","1","1","north"], @table)
+      @table.place_object(["place_object"], @robot)
+      @table.place_object(["place_object"], @robot)
+      expect(@table.obstacles.size).to eq(1)
+    end
   end
 
-  def test_eastern_out_of_bounds
-    assert_equal(false, @table.valid_move?(5,0))
+  context "add an obstacle when out of bounds" do
+    it "should not increase set count" do
+      @robot.place(["place","0","0","south"], @table)
+      @table.place_object(["place_object"], @robot)
+      expect(@table.obstacles.size).to eq(0)
+    end
   end
 
-  def test_southern_out_of_bounds
-    assert_equal(false, @table.valid_move?(0,-1))
-  end
-
-  def test_northern_out_of_bounds
-    assert_equal(false, @table.valid_move?(0, 5))
-  end
-
-  def test_add_obstacle
-    @table.add_obstacle(1,1)
-    assert_equal(true, @table.obstacles.include?([1,1]))
-  end
-
-  def test_add_obstacle_out_of_bounds
-    @table.add_obstacle(-1,1)
-    assert_equal(0, @table.obstacles.length)
-  end
-
-  def test_add_duplicate_obstacle_coordinates
-    @table.add_obstacle(1,1)
-    @table.add_obstacle(1,1)
-    assert_equal(1, @table.obstacles.length)
-  end
-
-  def test_obstacle_location?
-    @table.add_obstacle(1, 2)
-    assert_equal(true, @table.obstacle_location?(1, 2) )
-  end
-
-  def test_map_output
-    assert_output(/OOOOO\nOOOOO\nOOOOO\nOXOOO\nOOOOO/) do
-      @table.add_obstacle(1,1)
-      @table.map
+  describe "output from 'map' command" do
+    it "should output to stdout" do
+      @robot.place(["place","1","1","north"], @table)
+      @table.place_object(["place_object"], @robot)
+      expect { @table.map(["map"], @robot) }.to output(/OOOOO\nOOOOO\nOXOOO\nOOOOO\nOOOOO/).to_stdout
     end
   end
 end

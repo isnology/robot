@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative '../lib/controller'
+require_relative '../lib/application'
 
-Controller.new.main
+Application.new.run

@@ -11,7 +11,7 @@ class Application
     @table = Table.new
     @robot = Robot.new
     @input = Input.new
-    @process_cmd = ProcessCommand.new
+    @process_cmd = ProcessCommand.new(@robot, @table)
   end
 
   def run

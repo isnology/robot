@@ -1,96 +1,86 @@
-require 'minitest/autorun'
+require 'rspec'
 require_relative '../lib/table'
 require_relative '../lib/robot'
+require_relative '../lib/Coordinates'
 
-class RobotTest < Minitest::Test
+RSpec.describe "testing Robot class -" do
 
-  def setup
+  before do
     @table = Table.new
     @robot = Robot.new
   end
 
-  def test_responds_to_move
-    assert_respond_to(@robot, :move)
-  end
-
-  def test_responds_to_left
-    assert_respond_to(@robot, :left)
-  end
-
-  def test_responds_to_right
-    assert_respond_to(@robot, :right)
-  end
-
-  def test_responds_to_report
-    assert_respond_to(@robot, :report)
-  end
-
-  def test_responds_to_place
-    assert_respond_to(@robot, :place)
-  end
-
-  def test_invalid_report_message
-    assert_output(/No valid PLACE command received yet/) do
-      @robot.report
+  context "enter a command before a valid 'place' command" do
+    it "should output an error message" do
+      expect { @robot.report }.to output(/No valid PLACE command received yet/).to_stdout
     end
   end
 
-  def test_place_and_valid_report_messages
-    assert_output(/Output: 1, 2, NORTH/) do
-      @robot.place(1,2,"NORTH", @table)
-      @robot.report
+  context "enter a valid place command" do
+    it "should report position and direction" do
+      @robot.place(["place","1","2","north"], @table)
+      expect { @robot.report }.to output(/Output: 1, 2, NORTH/).to_stdout
     end
   end
 
-  def test_move_message
-    assert_output(/Output: 1, 2, NORTH/) do
-      @robot.place(1,1,"NORTH", @table)
-      @robot.move(@table)
-      @robot.report
+  context "enter a 'move' command" do
+    it "should do a move in the given direction" do
+      @robot.place(["place","1","1","north"], @table)
+      @robot.move(["move"], @table)
+      expect { @robot.report }.to output(/Output: 1, 2, NORTH/).to_stdout
     end
   end
 
-  def test_right_message
-    assert_output(/Output: 2, 1, EAST/) do
-      @robot.place(1,1,"NORTH", @table)
+  context "enter a 'right' command" do
+    it "should turn to the right" do
+      @robot.place(["place","1","1","north"], @table)
       @robot.right
-      @robot.move(@table)
-      @robot.report
+      @robot.move(["move"], @table)
+      expect { @robot.report }.to output(/Output: 2, 1, EAST/).to_stdout
     end
   end
 
-  def test_left_message
-    assert_output(/Output: 0, 1, WEST/) do
-      @robot.place(1,1,"NORTH", @table)
+  context "enter a 'left' command" do
+    it "should turn left" do
+      @robot.place(["place","1","1","north"], @table)
       @robot.left
-      @robot.move(@table)
-      @robot.report
+      @robot.move(["move"], @table)
+      expect { @robot.report }.to output(/Output: 0, 1, WEST/).to_stdout
     end
   end
 
-  def test_additional_place_message
-    assert_output(/Output: 1, 1, NORTH/) do
-      @robot.place(1,1,"NORTH", @table)
-      @robot.place(0,5,"WEST", @table)
-      @robot.report
+  context "enter an additional 'place' command" do
+    it "should place the robot at new coordinates and direction" do
+      @robot.place(["place","1","1","north"], @table)
+      @robot.place(["place","2","2","west"], @table)
+      expect { @robot.report }.to output(/Output: 2, 2, WEST/).to_stdout
     end
   end
 
-  def test_ignore_invalid_move_message
-    assert_output(/Output: 0, 1, WEST/) do
-      @robot.place(1,1,"WEST", @table)
-      @robot.move(@table)
-      @robot.move(@table)
-      @robot.report
+  context "enter an additional but invalid 'place' command" do
+    it "should ignore it" do
+      @robot.place(["place","1","1","north"], @table)
+      @robot.place(["place","0","5","west"], @table)
+      expect { @robot.report }.to output(/Output: 1, 1, NORTH/).to_stdout
     end
   end
 
-  def test_obstacle_blocking_move
-    assert_output(/Output: 1, 1, NORTH/) do
-      @robot.place(1,1,"NORTH", @table)
-      @table.add_obstacle(1, 2)
-      @robot.move(@table)
-      @robot.report
+  context "enter an invalid 'move' command" do
+    it "should ignore it" do
+      @robot.place(["place","1","1","west"], @table)
+      @robot.move(["move"], @table)
+      @robot.move(["move"], @table)
+      expect { @robot.report }.to output(/Output: 0, 1, WEST/).to_stdout
     end
   end
+
+  context "obstacle blocking move" do
+    it "should not move there" do
+      @robot.place(["place","1","1","north"], @table)
+      @table.place_object(["place_object"], @robot)
+      @robot.move(["move"], @table)
+      expect { @robot.report }.to output(/Output: 1, 1, NORTH/).to_stdout
+    end
+  end
+
 end

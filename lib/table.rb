@@ -1,6 +1,7 @@
 # simple robot moves on a 5 X 5 grid
 
 # model of MVC
+require_relative '../lib/robot'
 
 class Table
 
@@ -9,36 +10,41 @@ class Table
   attr_reader :obstacles
 
   X_MAX = Y_MAX = 4
+  X_MIN = Y_MIN = 0
 
   def initialize
     @obstacles = Set.new
   end
 
-  def add_obstacle(x, y)
-    @obstacles << [x, y] if in_bounds?(x, y)
+  def place_object(command, robot)
+    coordinates = robot.next_move
+    @obstacles << coordinates.to_sym if in_bounds?(coordinates)
   end
 
-  def valid_move?(x, y)
-    in_bounds?(x, y) and !obstacle_location?(x, y)
-  end
-
-  def obstacle_location?(x, y)
-    @obstacles.include?([x, y])
-  end
-
-  def map
+  def map(command = nil, robot = nil)
     puts
-    Y_MAX.downto(0) do |y|
-      0.upto(X_MAX) do |x|
-        print @obstacles.include?([x, y]) ? "X" : "O"
+    coord = Coordinates.new
+    Y_MAX.downto(Y_MIN) do |y|
+      coord.y = y
+      X_MIN.upto(X_MAX) do |x|
+        coord.x = x
+        print @obstacles.include?(coord.to_sym) ? "X" : "O"
       end
       puts
     end
   end
 
+  def valid_move?(coordinates)
+    in_bounds?(coordinates) and !obstacle_location?(coordinates)
+  end
+
   private
 
-    def in_bounds?(x, y)
-      !(x > X_MAX || x < 0 || y > Y_MAX || y < 0)
+    def obstacle_location?(coordinates)
+      @obstacles.include?(coordinates.to_sym)
+    end
+
+    def in_bounds?(coords)
+      !(coords.x > X_MAX || coords.x < X_MIN || coords.y > Y_MAX || coords.y < Y_MIN)
     end
 end
