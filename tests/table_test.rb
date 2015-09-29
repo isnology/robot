@@ -13,29 +13,29 @@ RSpec.describe Table do
 
   context 'outer limits' do
     it 'should be valid south-west position' do
-      expect(@table.valid_move?(Coordinates.new(0,0))).to be true
+      expect(@table).to be_valid_move(Coordinates.new(0,0))
     end
 
     it 'should be valid north-east position' do
-      expect(@table.valid_move?(Coordinates.new(4,4))).to be true
+      expect(@table).to be_valid_move(Coordinates.new(4,4))
     end
   end
 
   context 'out of bounds should be invalid' do
     it 'on western edge' do
-      expect(@table.valid_move?(Coordinates.new(-1,0))).to be false
+      expect(@table).not_to be_valid_move(Coordinates.new(-1,0))
     end
 
     it 'on eastern edge' do
-      expect(@table.valid_move?(Coordinates.new(5,0))).to be false
+      expect(@table).not_to be_valid_move(Coordinates.new(5,0))
     end
 
     it 'on southern edge' do
-      expect(@table.valid_move?(Coordinates.new(0,-1))).to be false
+      expect(@table).not_to be_valid_move(Coordinates.new(0,-1))
     end
 
     it 'on northern edge' do
-      expect(@table.valid_move?(Coordinates.new(0, 5))).to be false
+      expect(@table).not_to be_valid_move(Coordinates.new(0, 5))
     end
   end
 
@@ -49,7 +49,7 @@ RSpec.describe Table do
     it 'should be an invalid move' do
       @robot.place(['place','1','1','north'], @table)
       @table.place_object(['place_object'], @robot)
-      expect(@table.valid_move?(Coordinates.new(1, 2))).to be false
+      expect(@table).not_to be_valid_move(Coordinates.new(1, 2))
     end
 
     it 'in the same place twice should only add to set count once' do
