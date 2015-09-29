@@ -5,10 +5,6 @@ require_relative '../lib/coordinates'
 
 class Robot
 
-  NORTH = 0
-  EAST = 1
-  SOUTH = 2
-  WEST = 3
   NINETY_DEGREES = 1
   LOOP_AROUND = 0x03
 
