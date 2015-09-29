@@ -2,10 +2,9 @@
 
 # model of MVC
 require_relative '../lib/robot'
+require 'set'
 
 class Table
-
-  require 'set'
 
   attr_reader :obstacles
 
@@ -16,19 +15,19 @@ class Table
     @obstacles = Set.new
   end
 
-  def place_object(command, robot)
+  def place_object(*args, robot)
     coordinates = robot.next_move
     @obstacles << coordinates.to_sym if in_bounds?(coordinates)
   end
 
-  def map(command = nil, robot = nil)
+  def map(*args)
     puts
     coord = Coordinates.new
     Y_MAX.downto(Y_MIN) do |y|
       coord.y = y
       X_MIN.upto(X_MAX) do |x|
         coord.x = x
-        print @obstacles.include?(coord.to_sym) ? "X" : "O"
+        print @obstacles.include?(coord.to_sym) ? 'X' : 'O'
       end
       puts
     end
@@ -36,6 +35,10 @@ class Table
 
   def valid_move?(coordinates)
     in_bounds?(coordinates) and !obstacle_location?(coordinates)
+  end
+
+  def method_missing(meth, *args)
+    puts "\n\"#{meth}\" not a valid command"
   end
 
   private

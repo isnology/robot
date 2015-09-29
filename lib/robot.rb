@@ -19,15 +19,15 @@ class Robot
     @coordinates = Coordinates.new(-1,-1)
   end
 
-  def left(command = nil, table = nil)
+  def left(*args)
     @face = @face - NINETY_DEGREES & LOOP_AROUND if @face
   end
 
-  def right(command = nil, table = nil)
+  def right(*args)
     @face = @face + NINETY_DEGREES & LOOP_AROUND if @face
   end
 
-  def move(command, table)
+  def move(*args, table)
     # ignore command if result invalid
     ( @coordinates = next_move if table.valid_move?(next_move) ) if @face
   end
@@ -43,12 +43,18 @@ class Robot
     end
   end
 
-  def report(command = nil, table = nil)
+  def report(*args)
     puts @face ? "\nOutput: #{@coordinates.x}, #{@coordinates.y}, #{@face_name[@face]}" :
              "\nNo valid PLACE command received yet"
   end
 
   def next_move
     @coordinates + @move[@face.to_i]
+  end
+
+  def method_missing(meth, *args)
+    # method may be in Table object so delegate
+    # received -> meth(command, table) send -> table.meth(command, robot)
+    args[1].__send__(meth, args[0], self)
   end
 end
