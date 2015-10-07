@@ -16,16 +16,16 @@ class Robot
   end
 
   def left(*args)
-    @face = @face - NINETY_DEGREES & LOOP_AROUND if @face
+    @face = @face - NINETY_DEGREES & LOOP_AROUND if placed?
   end
 
   def right(*args)
-    @face = @face + NINETY_DEGREES & LOOP_AROUND if @face
+    @face = @face + NINETY_DEGREES & LOOP_AROUND if placed?
   end
 
   def move(*args, table)
     # ignore command if result invalid
-    ( @coordinates = next_move if table.valid_move?(next_move) ) if @face
+    @coordinates = next_move if placed? && table.valid_move?(next_move)
   end
 
   def place(command, table)
@@ -40,12 +40,16 @@ class Robot
   end
 
   def report(*args)
-    puts @face ? "\nOutput: #{@coordinates.x}, #{@coordinates.y}, #{@face_name[@face]}" :
+    puts placed? ? "\nOutput: #{@coordinates.x}, #{@coordinates.y}, #{@face_name[@face]}" :
              "\nNo valid PLACE command received yet"
   end
 
   def next_move
     @coordinates + @move[@face.to_i]
+  end
+
+  def placed?
+    @face != nil
   end
 
   def method_missing(meth, *args)
