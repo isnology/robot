@@ -16,9 +16,10 @@ class Table
   end
 
   def place_object(*args, robot)
-    coordinates = robot.next_move
-    #@obstacles << coordinates.to_sym if in_bounds?(coordinates)
-    @obstacles << coordinates if in_bounds?(coordinates)
+    if robot.placed?
+      coordinates = robot.next_move
+      @obstacles << coordinates if in_bounds?(coordinates)
+    end
   end
 
   def map(*args)
@@ -28,7 +29,6 @@ class Table
       coord.y = y
       X_MIN.upto(X_MAX) do |x|
         coord.x = x
-        #print @obstacles.include?(coord.to_sym) ? 'X' : 'O'
         print @obstacles.include?(coord) ? 'X' : 'O'
       end
       puts
@@ -46,7 +46,6 @@ class Table
   private
 
     def obstacle_location?(coordinates)
-      #@obstacles.include?(coordinates.to_sym)
       @obstacles.include?(coordinates)
     end
 
